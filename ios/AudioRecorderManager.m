@@ -217,6 +217,14 @@ RCT_EXPORT_METHOD(playRecording)
 
     NSError *error;
 
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:AVAudioSessionCategoryOptionDefaultToSpeaker error: &error];
+
+    if (error) {
+        [self stopProgressTimer];
+        NSLog(@"error setting speaker as output: %@", [error localizedDescription]);
+        return;
+    }
+      
     if (!_audioPlayer.playing) {
       _audioPlayer = [[AVAudioPlayer alloc]
         initWithContentsOfURL:_audioRecorder.url
